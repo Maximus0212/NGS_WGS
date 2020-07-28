@@ -91,17 +91,16 @@ java -jar /Bio/Access/home/hykim/YUHS/DATA2/snpEff/SnpSift.jar annotate /BiO/Edu
 # java -Xmx8g -jar /home/program/gatk-4.0.11.0/tk-package-4.0.11.0-local.jar IndexFeatureFile -F /home/hykim/Ref/dbsnp_138.hg19.vcf
 
 # How to  DOWNLOAD ANNOVAR
-# region, gene, filter basesd //// /BiO/Install/annovar/ -> 
+# region, gene, filter basesd //// perl /BiO/Install/annovar/ -> 
 # /annotate_variation.pl -buildver hg19 -downdb cytoBand humandb/ --> create my space
 # /annotate_variation.pl -buildver hg19 -downdb -webfrom annovar dbnsfp30a humandb/
-# /annotate_variation.pl -buildver hg19 -downdb webfrom annovar clinvar_20200316 humandb/
-# /annotate_variation.pl -buildver hg19 -downdb webfrom annovar avsnp138 humandb/
+# /annotate_variation.pl -buildver hg19 -downdb -webfrom annovar clinvar_20200316 humandb/
+# /annotate_variation.pl -buildver hg19 -downdb -webfrom annovar avsnp138 humandb/
 #
 # https://annovar.openbioinformatics.org/en/latest/user-guide/startup/
 #
 #
 #
-
 
 
 
