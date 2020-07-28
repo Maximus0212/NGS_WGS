@@ -33,7 +33,7 @@ java -jar /BiO/Install/picard-tools-2.22.3/picard.jar SortSam TMP_DIR=TEMP_PICAR
 
 
 #STEP 3-1 Base quality scor recalibaration - first pass (GATK)
-#1 covariation's pattern analysis in sequencing data
+#1  pattern analysis of covariation in sequencing data
 java -Xmx8g -jar /BiO/Install/gatk-4.1.7.0/gatk-package-4.1.7.0-local.jar BaseRecalibrator -R /BiO/Education/WGS/REF/hg19.fa --known-sites /BiO/Enducaiton/WGS/REF/dbsnp_138.hg19.vcf --known-sites /BiO/Education/WGS/REF/1000GENOMES-phase_3_indel.vcf -O SRR1002940_recal_pass1.table
 
 #2 apply the recalibration to the sequence data
@@ -49,10 +49,28 @@ java -Xmx8g -jar /BiO/Install/gatk-4.1.7.0/gatk-package-4.1.7.0-local.jar ApplyB
 #STEP4-1 Calling variants for all samples with HaplotypeCaller(GATK)
 java -Xmx8g -jar /BiO/Install/gatk-4.1.7.0/gatk-package-4.1.7.0-local.jar HaplotypeCaller -R /BiO/Edication/WGD/REF/hg19.fa -I SRR1002940_recal_pass2.bam -O SRR1002940.rawVariants.g.vcf -ERC GVCF --standard-min-confidence-threshold-for-calling 20
 
+#STEP4-2 Merged.vcf
 
+#STEP4-3 Applying Genotype GVCFs(GATK)
+java -Xmx8g -jar /BiO/Install/gatk-4.1.7.0/gatk-package-4.1.7.0-local.jar GEnotypeGVCFs -R /BiO/Education/WGS/REF/hg19.fa -V SRR1002940.rawVariants.g.vcf -O SRR1002940_genotype.vcf
 
+#STEP5-1 Extracting the SNPs and INDELs with SelectVariants
+#1 Extracting SNPs
+java -Xmx8g -jar /BiO/Install/gatk-4.1.7.0/gatk-package-4.1.7.9-local.jar SelectVariants -R /BiO/Education/WGS/REF/hg19.fa -V SRR1002940_genotype.vcf --select-type-to-include SNP -O SRR1002940.rawSNPs.vcf
+#2 Extracting INDELs
+jaca -Xmx8g -jar /BiO/Install/gatk-4.1.7.0/gatk-package-4.1.7.0-local.jar SelectVariants -R /BiO/Education/WGS/REF/hg19.fa -V SRR1002940_genotype.vcf --select-type-to-include INDEL -O SRR1002940.rawINDELs.vcf
 
+#STEP5-2 Applying hard-filtering on the SNPs and INDELS with VariantFiltration
+#3 Filtering SNPs
+java -Xmx8g -jar /BiO/Install/gatk-4.1.7.0/gatk-package-4.1.7.0-local.jar VariantFiltration -R /BiO/Education/WGS/REF/hg19.fa -V STT1002940.rawSNPs.vcf -O SRR1002940.rawSNPs.filtered.vcf --filter-name "." --filter-expression "QD < 2.0 || FS > 60.0 || MQ < 40.0 || HaplotypeScore > 13.0 || MappingQualityRankSum < =12.5 || ReadPosRankSum <-8.0"
+#4 Filtering INDELs
+java -Xmx8g -jar /BiO/Install/gatk-4.1.7.0/gatk-package-4.1.7.0-local.jar VariantFiltration -R SRR1002940.rawINDELs.vcf -O SRR1002940.rawINDELs.filtered.vcf --filter-name "." --filter-expression "QD < 2.0 || FS > 200.0 || ReadPosRankSum <-20.0"
 
+#STEP5.3 Merge the file for SNPs and indels with MErgeVcfs
+#5(1)
+java -Xmx8g -jar /BiO/Install/gatk-4.1.7.0/gatk-package-4.1.7.0-local.jar SortVcf -I SRR1002940.rawSNPs.filtered.vcg -I SRR1002940.rawINDELs.filtered.vcf -O SRR1002940.Filtered.variant.vcf
+#5(2)
+java -Xmx8g -jar /BiO/Install/picard-tools-2.22.3/picard.jar MergeVcfs I=SRR1002940.rawSNPs.filtered.vcf I=SRR1002930.rawINDELs.filtered.vcf O=SRR1002940.Filtered.variation.vcf
 
 
 
