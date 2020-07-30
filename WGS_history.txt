@@ -49,7 +49,7 @@ java -Xmx8g -jar /BiO/Install/gatk-4.1.7.0/gatk-package-4.1.7.0-local.jar ApplyB
 #STEP4-1 Calling variants for all samples with HaplotypeCaller(GATK)
 java -Xmx8g -jar /BiO/Install/gatk-4.1.7.0/gatk-package-4.1.7.0-local.jar HaplotypeCaller -R /BiO/Edication/WGD/REF/hg19.fa -I SRR1002940_recal_pass2.bam -O SRR1002940.rawVariants.g.vcf -ERC GVCF --standard-min-confidence-threshold-for-calling 20
 
-#STEP4-2 Merged.vcf
+(#STEP4-2 Merged.vcf)
 java -Xmx8g -jar /BiO/Install/gatk-4.1.7.0/gatk-package-4.1.7.0-local.jar CombineGVCFs -R /BiO/Access/home/hykim/YUHS/REF/hg19.fa --variant SRR1002940.rawVariants.g.vcf --variant SRR1533626.rawVariants.g.vcf -O cohort.g.vcf 
 
 #STEP4-3 Applying Genotype GVCFs(GATK)
